@@ -1,17 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
+import { cloudinary } from './cloudinary.provider';
 
 @Injectable()
 export class MediaService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(file: Express.Multer.File, alt?: string) {
+  async uploadToCloudinary(file: Express.Multer.File): Promise<{ url: string; publicId: string }> {
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'sslotsync', resource_type: 'image' },
+        (error, result) => {
+          if (error || !result) return reject(error);
+          resolve({ url: result.secure_url, publicId: result.public_id });
+        },
+      );
+      uploadStream.end(file.buffer);
+    });
+  }
+
+  async create(file: Express.Multer.File, alt?: string) {
+    const { url, publicId } = await this.uploadToCloudinary(file);
     return this.prisma.media.create({
       data: {
-        filename: file.filename,
-        url: `/uploads/media/${file.filename}`,
+        filename: file.originalname,
+        url,
+        publicId,
         mimeType: file.mimetype,
         size: file.size,
         alt,
@@ -32,10 +46,12 @@ export class MediaService {
   async remove(id: string) {
     const media = await this.findOne(id);
     await this.prisma.media.delete({ where: { id } });
-    try {
-      await unlink(join(process.cwd(), 'uploads', 'media', media.filename));
-    } catch {
-      // file already missing from disk; ignore
+    if (media.publicId) {
+      try {
+        await cloudinary.uploader.destroy(media.publicId);
+      } catch {
+        // already removed from Cloudinary; ignore
+      }
     }
     return media;
   }

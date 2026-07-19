@@ -114,6 +114,7 @@ model Media {
   id        String   @id @default(uuid())
   filename  String
   url       String
+  publicId  String?
   mimeType  String
   size      Int
   alt       String?

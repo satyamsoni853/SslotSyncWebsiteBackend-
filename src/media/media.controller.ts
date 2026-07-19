@@ -10,9 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
-import { randomUUID } from 'crypto';
+import { memoryStorage } from 'multer';
 import { MediaService } from './media.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -34,12 +32,7 @@ export class MediaController {
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads/media',
-        filename: (_req, file, cb) => {
-          cb(null, `${randomUUID()}${extname(file.originalname)}`);
-        },
-      }),
+      storage: memoryStorage(),
       limits: { fileSize: 10 * 1024 * 1024 },
       fileFilter: (_req, file, cb) => {
         if (!file.mimetype.startsWith('image/')) {
