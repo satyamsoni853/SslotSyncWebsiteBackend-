@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -9,8 +9,14 @@ export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
   @Get()
-  findAll(@Query('all') all?: string) {
-    return this.servicesService.findAll(all === 'true');
+  findAll() {
+    return this.servicesService.findAll(false);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('admin/all')
+  findAllForAdmin() {
+    return this.servicesService.findAll(true);
   }
 
   @Get(':id')

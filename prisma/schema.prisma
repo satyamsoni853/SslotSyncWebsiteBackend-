@@ -119,3 +119,72 @@ model Media {
   alt       String?
   createdAt DateTime @default(now())
 }
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  text      String
+  avatar    String?
+  location  String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  specialty String?
+  bio       String
+  initials  String?
+  photoUrl  String?
+  linkedin  String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PricingPlan {
+  id          String   @id @default(uuid())
+  name        String
+  price       String
+  description String
+  features    String[]
+  iconName    String?
+  highlight   Boolean  @default(false)
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Section is either "enterprise" (Enterprise Architectures) or "social" (Social Excellence)
+model ContentCard {
+  id          String   @id @default(uuid())
+  section     String
+  title       String
+  description String
+  features    String[]
+  tags        String[]
+  iconName    String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Category groups images by carousel usage, e.g. "social"
+model GalleryImage {
+  id        String   @id @default(uuid())
+  category  String   @default("social")
+  imageUrl  String
+  caption   String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

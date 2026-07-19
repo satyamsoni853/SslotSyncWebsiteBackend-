@@ -13,6 +13,11 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { BlogModule } from './blog/blog.module';
 import { AdsModule } from './ads/ads.module';
 import { MediaModule } from './media/media.module';
+import { TestimonialsModule } from './testimonials/testimonials.module';
+import { TeamModule } from './team/team.module';
+import { PricingPlansModule } from './pricing-plans/pricing-plans.module';
+import { ContentCardsModule } from './content-cards/content-cards.module';
+import { GalleryModule } from './gallery/gallery.module';
 
 @Module({
   imports: [
@@ -30,6 +35,11 @@ import { MediaModule } from './media/media.module';
     BlogModule,
     AdsModule,
     MediaModule,
+    TestimonialsModule,
+    TeamModule,
+    PricingPlansModule,
+    ContentCardsModule,
+    GalleryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

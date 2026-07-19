@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
@@ -9,8 +9,14 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  findAll(@Query('all') all?: string) {
-    return this.blogService.findAll(all === 'true');
+  findAll() {
+    return this.blogService.findAll(false);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('admin/all')
+  findAllForAdmin() {
+    return this.blogService.findAll(true);
   }
 
   @Get(':id')

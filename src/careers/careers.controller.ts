@@ -6,7 +6,6 @@ import {
   Patch,
   Post,
   Delete,
-  Query,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -26,8 +25,14 @@ export class CareersController {
   constructor(private readonly careersService: CareersService) {}
 
   @Get('jobs')
-  findAllJobs(@Query('all') all?: string) {
-    return this.careersService.findAllJobs(all === 'true');
+  findAllJobs() {
+    return this.careersService.findAllJobs(false);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('jobs/admin/all')
+  findAllJobsForAdmin() {
+    return this.careersService.findAllJobs(true);
   }
 
   @Get('jobs/:id')
