@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { AdsService } from './ads.service';
 import { CreateAdDto } from './dto/create-ad.dto';
 import { UpdateAdDto } from './dto/update-ad.dto';
@@ -9,8 +9,14 @@ export class AdsController {
   constructor(private readonly adsService: AdsService) {}
 
   @Get()
-  findAll(@Query('all') all?: string) {
-    return this.adsService.findAll(all === 'true');
+  findAll() {
+    return this.adsService.findAll(false);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('admin/all')
+  findAllForAdmin() {
+    return this.adsService.findAll(true);
   }
 
   @Get(':id')
